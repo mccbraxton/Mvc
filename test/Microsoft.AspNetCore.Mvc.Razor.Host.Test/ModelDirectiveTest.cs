@@ -1,6 +1,7 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.IO;
 using System.Text;
 using Microsoft.AspNetCore.Razor.Evolution;
@@ -23,7 +24,7 @@ namespace Microsoft.AspNetCore.Mvc.Razor.Host
 
             var engine = CreateEngine();
 
-            var irDocument = CreateIRDocument(engine, codeDocument);
+            var irDocument = CreateIRLoweringDocument(engine, codeDocument);
 
             // Act
             var result = ModelDirective.GetModelType(irDocument);
@@ -58,16 +59,14 @@ namespace Microsoft.AspNetCore.Mvc.Razor.Host
 @model Type1
 ");
 
-            var engine = CreateEngine();
-            var pass = new ModelDirective.Pass()
+            var engine = RazorEngine.Create(b =>
             {
-                Engine = engine,
-            };
-
-            var irDocument = CreateIRDocument(engine, codeDocument);
+                b.AddDirective(ModelDirective.Directive);
+                b.Features.Add(new ModelDirective.Pass());
+            });
 
             // Act
-            pass.Execute(codeDocument, irDocument);
+            var irDocument = CreateIRDocument(engine, codeDocument);
 
             // Assert
             var @class = FindClassNode(irDocument);
@@ -85,16 +84,14 @@ namespace Microsoft.AspNetCore.Mvc.Razor.Host
 @model Type2
 ");
 
-            var engine = CreateEngine();
-            var pass = new ModelDirective.Pass()
+            var engine = RazorEngine.Create(b =>
             {
-                Engine = engine,
-            };
-
-            var irDocument = CreateIRDocument(engine, codeDocument);
+                b.AddDirective(ModelDirective.Directive);
+                b.Features.Add(new ModelDirective.Pass());
+            });
 
             // Act
-            pass.Execute(codeDocument, irDocument);
+            var irDocument = CreateIRDocument(engine, codeDocument);
 
             // Assert
             var @class = FindClassNode(irDocument);
@@ -180,6 +177,22 @@ namespace Microsoft.AspNetCore.Mvc.Razor.Host
                 // Notice we're not registering the ModelDirective.Pass here so we can run it on demand.
                 b.AddDirective(ModelDirective.Directive);
             });
+        }
+
+        private DocumentIRNode CreateIRLoweringDocument(RazorEngine engine, RazorCodeDocument codeDocument)
+        {
+            for (var i = 0; i < engine.Phases.Count; i++)
+            {
+                var phase = engine.Phases[i];
+                phase.Execute(codeDocument);
+
+                if (phase is IRazorIRLoweringPhase)
+                {
+                    break;
+                }
+            }
+
+            return codeDocument.GetIRDocument();
         }
 
         private DocumentIRNode CreateIRDocument(RazorEngine engine, RazorCodeDocument codeDocument)

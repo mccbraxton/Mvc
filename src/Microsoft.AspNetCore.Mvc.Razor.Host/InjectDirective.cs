@@ -89,7 +89,7 @@ namespace Microsoft.AspNetCore.Mvc.Razor.Host
                 {
                     Directives.Add(node);
                 }
-                }
             }
         }
+    }
 }

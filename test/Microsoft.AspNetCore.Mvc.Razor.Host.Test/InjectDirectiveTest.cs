@@ -21,15 +21,9 @@ namespace Microsoft.AspNetCore.Mvc.Razor.Host
 ");
 
             var engine = CreateEngine();
-            var pass = new InjectDirective.Pass()
-            {
-                Engine = engine,
-            };
-
-            var irDocument = CreateIRDocument(engine, codeDocument);
 
             // Act
-            pass.Execute(codeDocument, irDocument);
+            var irDocument = CreateIRDocument(engine, codeDocument);
 
             // Assert
             var @class = FindClassNode(irDocument);
@@ -53,15 +47,9 @@ namespace Microsoft.AspNetCore.Mvc.Razor.Host
 ");
 
             var engine = CreateEngine();
-            var pass = new InjectDirective.Pass()
-            {
-                Engine = engine,
-            };
-
-            var irDocument = CreateIRDocument(engine, codeDocument);
 
             // Act
-            pass.Execute(codeDocument, irDocument);
+            var irDocument = CreateIRDocument(engine, codeDocument);
 
             // Assert
             var @class = FindClassNode(irDocument);
@@ -84,15 +72,9 @@ namespace Microsoft.AspNetCore.Mvc.Razor.Host
 ");
 
             var engine = CreateEngine();
-            var pass = new InjectDirective.Pass()
-            {
-                Engine = engine,
-            };
-
-            var irDocument = CreateIRDocument(engine, codeDocument);
 
             // Act
-            pass.Execute(codeDocument, irDocument);
+            var irDocument = CreateIRDocument(engine, codeDocument);
 
             // Assert
             var @class = FindClassNode(irDocument);
@@ -116,15 +98,9 @@ namespace Microsoft.AspNetCore.Mvc.Razor.Host
 ");
 
             var engine = CreateEngine();
-            var pass = new InjectDirective.Pass()
-            {
-                Engine = engine,
-            };
-
-            var irDocument = CreateIRDocument(engine, codeDocument);
 
             // Act
-            pass.Execute(codeDocument, irDocument);
+            var irDocument = CreateIRDocument(engine, codeDocument);
 
             // Assert
             var @class = FindClassNode(irDocument);
@@ -148,15 +124,9 @@ namespace Microsoft.AspNetCore.Mvc.Razor.Host
 ");
 
             var engine = CreateEngine();
-            var pass = new InjectDirective.Pass()
-            {
-                Engine = engine,
-            };
-
-            var irDocument = CreateIRDocument(engine, codeDocument);
 
             // Act
-            pass.Execute(codeDocument, irDocument);
+            var irDocument = CreateIRDocument(engine, codeDocument);
 
             // Assert
             var @class = FindClassNode(irDocument);
@@ -194,9 +164,10 @@ namespace Microsoft.AspNetCore.Mvc.Razor.Host
         {
             return RazorEngine.Create(b =>
             {
-                // Notice we're not registering the InjectDirective.Pass here so we can run it on demand.
                 b.AddDirective(InjectDirective.Directive);
                 b.AddDirective(ModelDirective.Directive);
+
+                b.Features.Add(new InjectDirective.Pass());
             });
         }
 
