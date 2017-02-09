@@ -177,7 +177,7 @@ namespace Microsoft.AspNetCore.Mvc.Test
         }
 
         [Fact]
-        public void Controller_View_WithParameterNullViewModel_MaintainsNullModel()
+        public void Controller_View_WithNullModelParameter_MaintainsNullModel()
         {
             // Arrange
             var controller = new TestableController()
@@ -185,33 +185,13 @@ namespace Microsoft.AspNetCore.Mvc.Test
                 ViewData = new ViewDataDictionary(new EmptyModelMetadataProvider()),
                 TempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>()),
             };
+            controller.ViewData.Model = new object();
 
             // Act
             var actualViewResult = controller.View(model: null);
 
             // Assert
             Assert.IsType<ViewResult>(actualViewResult);
-            Assert.Null(actualViewResult.ViewName);
-            Assert.Same(controller.ViewData, actualViewResult.ViewData);
-            Assert.Same(controller.TempData, actualViewResult.TempData);
-            Assert.Null(actualViewResult.ViewData.Model);
-        }
-
-        [Fact]
-        public void Controller_PartialView_WithoutParameter_SetsResultNullViewNameAndNullViewDataModelAndSameTempData()
-        {
-            // Arrange
-            var controller = new TestableController()
-            {
-                ViewData = new ViewDataDictionary(new EmptyModelMetadataProvider()),
-                TempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>()),
-            };
-
-            // Act
-            var actualViewResult = controller.PartialView();
-
-            // Assert
-            Assert.IsType<PartialViewResult>(actualViewResult);
             Assert.Null(actualViewResult.ViewName);
             Assert.Same(controller.ViewData, actualViewResult.ViewData);
             Assert.Same(controller.TempData, actualViewResult.TempData);
@@ -308,7 +288,7 @@ namespace Microsoft.AspNetCore.Mvc.Test
         }
 
         [Fact]
-        public void Controller_PartialView_WithParameterNullViewModel_MaintainsNullModel()
+        public void Controller_PartialView_WithNullModelParameter_MaintainsNullModel()
         {
             // Arrange
             var controller = new TestableController()
@@ -316,6 +296,7 @@ namespace Microsoft.AspNetCore.Mvc.Test
                 ViewData = new ViewDataDictionary(new EmptyModelMetadataProvider()),
                 TempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>()),
             };
+            controller.ViewData.Model = new object();
 
             // Act
             var actualViewResult = controller.PartialView(model: null);

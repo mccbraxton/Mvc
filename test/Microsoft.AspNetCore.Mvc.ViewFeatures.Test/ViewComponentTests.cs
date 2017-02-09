@@ -144,6 +144,7 @@ namespace Microsoft.AspNetCore.Mvc
         {
             // Arrange
             var viewComponent = new TestViewComponent();
+            viewComponent.ViewData.Model = new object();
 
             // Act
             var actualResult = viewComponent.View(model: null as object);
@@ -162,9 +163,10 @@ namespace Microsoft.AspNetCore.Mvc
         {
             // Arrange
             var viewComponent = new TestViewComponent();
+            viewComponent.ViewData.Model = new object();
 
             // Act
-            var actualResult = viewComponent.View("CustomViewName", model: null as object);
+            var actualResult = viewComponent.View<object>("CustomViewName", model: null);
 
             // Assert
             Assert.IsType<ViewViewComponentResult>(actualResult);
@@ -180,6 +182,7 @@ namespace Microsoft.AspNetCore.Mvc
         {
             // Arrange
             var viewComponent = new TestViewComponent();
+            viewComponent.ViewData.Model = "Hello World!";
 
             // Act
             var actualResult = viewComponent.View<string>("CustomViewName", model: null);
