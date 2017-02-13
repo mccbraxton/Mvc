@@ -145,9 +145,10 @@ namespace Microsoft.AspNetCore.Mvc
             // Arrange
             var viewComponent = new TestViewComponent();
             viewComponent.ViewData.Model = new object();
+            object model = null;
 
             // Act
-            var actualResult = viewComponent.View(model: null as object);
+            var actualResult = viewComponent.View(model: model);
 
             // Assert
             Assert.IsType<ViewViewComponentResult>(actualResult);

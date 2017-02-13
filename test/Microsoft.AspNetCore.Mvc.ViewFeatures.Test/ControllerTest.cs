@@ -177,7 +177,7 @@ namespace Microsoft.AspNetCore.Mvc.Test
         }
 
         [Fact]
-        public void Controller_View_WithNullModelParameter_MaintainsNullModel()
+        public void Controller_View_WithNullModelParameter_OverwritesViewDataModel()
         {
             // Arrange
             var controller = new TestableController()
@@ -223,7 +223,7 @@ namespace Microsoft.AspNetCore.Mvc.Test
         }
 
         [Fact]
-        public void Controller_PartialView_WithParameterViewName_SetsResultViewNameAndNullViewDataModelAndSameTempData()
+        public void Controller_PartialView_WithParameterViewName_SetsResultViewNameAndMaintainsSameViewDataModelAndTempData()
         {
             // Arrange
             var controller = new TestableController()
@@ -231,6 +231,7 @@ namespace Microsoft.AspNetCore.Mvc.Test
                 ViewData = new ViewDataDictionary(new EmptyModelMetadataProvider()),
                 TempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>()),
             };
+            var model = new object();
 
             // Act
             var actualViewResult = controller.PartialView("CustomViewName");
@@ -240,7 +241,7 @@ namespace Microsoft.AspNetCore.Mvc.Test
             Assert.Equal("CustomViewName", actualViewResult.ViewName);
             Assert.Same(controller.ViewData, actualViewResult.ViewData);
             Assert.Same(controller.TempData, actualViewResult.TempData);
-            Assert.Null(actualViewResult.ViewData.Model);
+            Assert.Same(model, actualViewResult.ViewData.Model);
         }
 
         [Fact]
@@ -288,7 +289,7 @@ namespace Microsoft.AspNetCore.Mvc.Test
         }
 
         [Fact]
-        public void Controller_PartialView_WithNullModelParameter_MaintainsNullModel()
+        public void Controller_PartialView_WithNullModelParameter_OverwritesViewDataModel()
         {
             // Arrange
             var controller = new TestableController()
